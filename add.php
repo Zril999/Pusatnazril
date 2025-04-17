@@ -1,24 +1,25 @@
 <?php
+// Menerima data POST
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['formatcurl'])) {
+    // Ambil data formatcurl
+    $formatcurl = $_POST['formatcurl'];
 
-$read = file_get_contents('data.json');
-$json = json_decode($read,true);
+    // Lokasi file data.php
+    $file = 'data.php';
 
-if($read == null || $read == '' || $read == 'null')
-{
-	$init = [];
-	$write = fopen("data.json","w") or die("Cannot write to path");
-			 fwrite($write,json_encode($init));
-			 fclose($write);
-	exit();
+    // Buka file data.php
+    $handle = fopen($file, 'a');
+
+    // Menuliskan formatcurl ke dalam file data.php
+    fwrite($handle, $formatcurl . "\n\n");
+
+    // Tutup file
+    fclose($handle);
+
+    // Kirim respons berhasil
+    echo json_encode(array('success' => true));
+} else {
+    // Kirim respons gagal jika tidak ada data formatcurl yang diterima
+    echo json_encode(array('success' => false, 'message' => 'Data formatcurl tidak ditemukan.'));
 }
-
-$add = array(
-	'email' => $_GET['mail']
-	);
-
-array_unshift($json,$add);
-$put = fopen("data.json","w") or die("Cannot write to path");
-		 fwrite($put,json_encode($json));
-		 fclose($put);
-
-echo '200';
+?>
